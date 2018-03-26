@@ -23,17 +23,40 @@ def var_convert(ctx, convert):
                           'View snow_parse logs for more information.')
 
 
-# create_cat_item(user_name, user_pwd, table_name, table_sys_id,
-#                    cat_item_name, cat_item_description):
+@task
+def get_attachment(ctx, user_name, user_pwd,
+                   table_name, table_sys_id):
+    """Call catalog item creation application."""
+    # returns the file name of the attachment
+    return terrasnow.get_attachment(user_name, user_pwd, table_name,
+                                    table_sys_id)
 
 
 @task
-def create_terraform_cat_item(ctx, user_name, user_pwd,
-                              table_name, table_sys_id,
-                              cat_item_name, cat_item_description):
+def create_catalog_item(ctx, user_name, user_pwd, table_name, table_sys_id,
+                        cat_item_name, cat_item_description):
     """Call catalog item creation application."""
-    terrasnow.create_cat_item(user_name, user_pwd, table_name, table_sys_id,
-                              cat_item_name, cat_item_description)
+    # returns sys id of new catalog item
+    return terrasnow.create_catalog_item(user_name, user_pwd, table_name,
+                                         table_sys_id, cat_item_name,
+                                         cat_item_description)
+
+
+@task
+def unzip_and_create_vars(ctx, user_name, user_pwd, file_name, cat_sys_id):
+    """Unzip template and create catalog item vars."""
+    # returns the full path of the zip file's location on the local disk
+    return terrasnow.unzip_and_create_vars(user_name, user_pwd, file_name,
+                                           cat_sys_id)
+
+
+@task
+def s3_upload(ctx, user_name, user_pwd, table_name, sys_id, file_name,
+              cat_sys_id, zip_full_path, target_bucket):
+    """Upload the attachment to s3."""
+    return terrasnow.s3_upload(user_name, user_pwd, table_name, sys_id,
+                               file_name, cat_sys_id, zip_full_path,
+                               target_bucket)
 
 
 @task
