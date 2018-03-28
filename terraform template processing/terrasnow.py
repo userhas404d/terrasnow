@@ -1,5 +1,8 @@
 """All the things."""
 
+import os
+import shutil
+
 import s3_handler
 import snow_cat_item
 import snowgetter
@@ -77,3 +80,13 @@ def s3_upload(user_name, user_pwd, table_name, sys_id, file_name,
         #                                  user_name, user_pwd)
     else:
         return 'File upload failed.'
+
+
+def cleanup(zip_full_path):
+    """Delete the local zip file."""
+    os.remove(zip_full_path)
+    try:
+        shutil.rmtree('./templates/tmp')
+        return "Attachment download removed from local disk."
+    except FileNotFoundError as e:
+        return "tmp directory not present."
