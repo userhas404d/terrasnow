@@ -47,12 +47,12 @@ class zip_parser(object):
                     snow_zip.extract(self.out_file_loc,
                                      path=self.unzip_path)
                 except KeyError as e:
-                    print('Required files not present in archive.')
+                    print('ERROR: Required files not present in archive.')
             else:
                 print(zip_test)
                 raise
         except zipfile.BadZipFile as e:
-            print("Bad zip file")
+            print("ERROR: Bad zip file")
 
     def hcl_to_json(self, tf_loc):
         """Convert HCL format files to JSON."""

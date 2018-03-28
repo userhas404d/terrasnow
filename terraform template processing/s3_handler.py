@@ -66,10 +66,11 @@ class Handler(object):
         """Create object URI."""
         # https://stackoverflow.com/questions/33809592
         if self.check_bucket() and self.local_file_check():
-            return ('https://s3.amazonaws.com/{0}/{1}'.format(
-                      self.target_bucket, self.file_name))
+            return ('s3::https://s3.amazonaws.com/{0}/{1}'.format(
+                    self.target_bucket, self.upload_file_name))
         else:
             logging.error('URL creation failed.')
+            print('ERROR: URL creation failed.')
 
     def upload_file(self):
         """Upload file."""

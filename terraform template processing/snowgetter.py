@@ -126,6 +126,7 @@ class snow_record(object):
                                              headers=self.headers,
                                              method='GET')
                 self.response = self.opener.open(req)
+                # print(self.response.read())
                 return self.eval_response()
             except IOError as e:
                 print(e)
@@ -157,6 +158,7 @@ def get_attachment_info(table_name, table_sys_id, user_name, user_pwd):
 
 def attachment_response_results(response):
     """Evalute attachment request response contents."""
+    logging.info('response recieved: '.format(response))
     try:
         content_type = response['result'][0]['content_type']
         if content_type == 'application/zip':
@@ -171,6 +173,37 @@ def attachment_response_results(response):
     except KeyError as e:
         logging.error('Response did not contain expected results.')
         print('sys_id not found in response.')
+    except TypeError as e:
+        logging.error('Results were empty.')
+        print('Results were empty.')
+    except IndexError as e:
+        logging.error('Results were empty')
+
+
+def get_workflow_stage(workflow_sys_id, workflow_name, stage_name, user_name,
+                       user_pwd):
+    """Return name of stage."""
+    logging.info('submitting workflow stage name request.')
+    query = ('workflow_version.sys_id={}'.format(workflow_sys_id) +
+             '^workflow_version.name={}'.format(workflow_name) +
+             '^name={}'.format(stage_name))
+    record = snow_record('table/wf_stage?', query, "", user_name, user_pwd)
+    logging.info('Defined snowgetter parameters.')
+    response = record.make_GET_request()
+    logging.info('Made get request via snowgetter.')
+    return workflow_stage_response_results(response)
+
+
+def workflow_stage_response_results(response):
+    """Evalute attachment request response contents."""
+    try:
+        return response['result'][0]['name']
+    except KeyError as e:
+        logging.error('Response did not contain expected results.')
+        return False
+    except IndexError as e:
+        logging.error('Response did not contain expected results.')
+        return False
 
 
 def make_cat_item(cat_item_data, user_name, user_pwd):
@@ -212,11 +245,11 @@ def sys_id_check(response):
     """Evaluate cat item creation response contents."""
     try:
         sys_id = response['result']['sys_id']
-        logging.info('Found attachment sys_id: {}'.format(sys_id))
+        logging.info('Response contained sys_id: {}'.format(sys_id))
         return sys_id
     except KeyError as e:
         logging.error('Response did not contain expected results.')
-        print('sys_id not found in response.')
+        print('ERROR: sys_id not found in response.')
 
 
 def path_check(file_path):
