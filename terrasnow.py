@@ -1,5 +1,6 @@
 """All the things."""
 
+import logging
 import os
 import shutil
 
@@ -11,6 +12,11 @@ import handlers.zip_handler as zip_handler
 # Should be static (set at the workflow level?)
 file_path = './templates/'
 target_bucket = 'snow-terraform-testing'
+
+FORMAT = ("[%(asctime)s][%(levelname)s]" +
+          "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s")
+logging.basicConfig(filename='terrasnow.log', level=logging.INFO,
+                    format=FORMAT)
 
 
 def get_attachment(user_name, user_pwd, table_name, table_sys_id):
@@ -27,6 +33,7 @@ def get_attachment(user_name, user_pwd, table_name, table_sys_id):
                                   user_pwd)
         return file_name
     except TypeError as e:
+        logging.exception('Query results were empty.')
         return ('ERROR: Query results were empty.' +
                 ' Confirm record and attachment exist.')
 
@@ -38,6 +45,7 @@ def create_catalog_item(user_name, user_pwd, table_name, table_sys_id,
     my_cat = snow_cat_item.SnowCatalogItem(cat_item_name, cat_item_description)
     # create the category item and return it's sys_id
     cat_sys_id = snowgetter.make_cat_item(my_cat.data(), user_name, user_pwd)
+    logging.info('created catalog item: {}'.format(cat_sys_id))
     return cat_sys_id
 
 
@@ -107,4 +115,5 @@ def cleanup(zip_full_path):
         shutil.rmtree('./templates/tmp')
         return "Attachment download removed from local disk."
     except FileNotFoundError as e:
+        logging.exception('directory is not present.')
         return "tmp directory not present."
