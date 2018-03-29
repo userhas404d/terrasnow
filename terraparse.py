@@ -24,12 +24,10 @@ def get_template(template_file, source_bucket):
     my_file = pathlib.Path("{0}/{1}".format(templates_path, template_file))
     if my_file.is_file():
         logging.info('File found on local disk.')
-        print('SUCCESS.')
     else:
         logging.info('File not found. Retrieving from S3.')
         s3_obj = s3_handler.Handler(template_file, "", my_file, source_bucket)
         s3_obj.download_obj()
-        print('SUCCESS')
 
 
 def create_working_dir(req_sys_id):
