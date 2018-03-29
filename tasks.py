@@ -92,21 +92,27 @@ def terraform_init(ctx, target_dir):
 
 
 @task
-def terraform_plan(ctx):
+def terraform_plan(ctx, target_dir):
     """Call terraform plan."""
     responder = invoke.watchers.Responder(pattern=r"Enter a value:",
                                           response="\n")
     logging.info('terraform plan called')
-    ctx.run('terraform plan', watchers=[responder])
+    print(ctx.run('terraform plan', watchers=[responder], warn=True))
 
 
 @task
-def terraform_apply(ctx):
+def terraform_apply(ctx, target_dir):
     """Call terraform apply."""
     logging.info('terraform apply called')
     responder = invoke.watchers.Responder(pattern=r"Enter a value:",
                                           response="\n")
-    ctx.run('terraform apply -auto-approve', watchers=[responder])
+    print(ctx.run('terraform apply -auto-approve', watchers=[responder],
+                  warn=True))
+
+
+@task
+def export_terraform_state(ctx, target_dir):
+    """Upload the terraform state to S3."""
 
 
 @task
