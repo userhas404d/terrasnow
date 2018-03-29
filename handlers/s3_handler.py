@@ -60,10 +60,11 @@ class Handler(object):
         response = s3.list_objects(Bucket=self.target_bucket)
         if not any(d['Key'] == self.upload_file_name
                    for d in response['Contents']):
-            logging.info('file not in bucket.')
+            logging.info('file: {} not in bucket.'.format(
+                         self.upload_file_name))
             return True
         else:
-            logging.info('file in bucket.')
+            logging.info('file: {} in bucket.'.format(self.upload_file_name))
             return False
 
     def get_obj_uri(self):
@@ -82,7 +83,7 @@ class Handler(object):
 
     def get_upload_file_name(self, file_name):
         """Return the name of the file to upload."""
-        if not self.sys_id and not self.file_name:
+        if self.sys_id and self.file_name:
             return self.sys_id + '-' + self.file_name
         else:
             return file_name
