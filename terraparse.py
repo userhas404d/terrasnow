@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import pathlib
+import time
 import zipfile
 
 import handlers.s3_handler as s3_handler
@@ -46,8 +47,15 @@ def create_working_dir(req_sys_id):
 
 def unzip_template(template_file, working_dir):
     """Unzip the terraform template into the working directory."""
-    with zipfile.ZipFile(template_file, "r") as zip_ref:
-        zip_ref.extractall(working_dir)
+    while not os.path.exists(working_dir):
+        time.sleep(1)
+
+    if os.path.isfile(working_dir):
+        with zipfile.ZipFile(template_file, "r") as zip_ref:
+            zip_ref.extractall(working_dir)
+        logging.info('Unzipped template to: {}'.format(working_dir))
+    else:
+        raise ValueError("%s isn't a file!" % working_dir)
 
 
 # [Workflow acticity #2]
