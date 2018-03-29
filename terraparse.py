@@ -119,6 +119,7 @@ def get_tf_vars(input_string, target_dir):
     while not os.path.exists(target_dir):
         time.sleep(1)
     if os.path.exists(target_dir):
+        logging.info('target directory: {} exists.'.format(target_dir))
         full_file_name = target_dir + '/' + 'terraform.tfvars'
         json_obj = input_to_json(input_string)
         json_obj = get_sorted_obj(json_obj)
