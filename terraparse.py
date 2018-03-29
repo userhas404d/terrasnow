@@ -56,6 +56,20 @@ def unzip_template(template_file, working_dir):
         raise ValueError("%s isn't a file!" % template_file)
 
 
+# https://forum.quartertothree.com/t/automatically-moving-files-from-subdirectories-up-to-parent-directory/64445/6
+def flatten_files(working_dir):
+    """Move all files in sub directories to here, then delete subdirs."""
+    for root, dirs, files in os.walk(working_dir, topdown=False):
+        if root != working_dir:
+            for name in files:
+                source = os.path.join(root, name)
+                target = os.path.join(working_dir, name)
+                os.rename(source, target)
+
+        for name in dirs:
+            os.rmdir(os.path.join(root, name))
+
+
 # [Workflow acticity #2]
 # convert sn json object to terraform readible object
 

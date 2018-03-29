@@ -73,6 +73,7 @@ def initialize(ctx, template_file, source_bucket, req_sys_id):
     working_dir = terraparse.create_working_dir(req_sys_id)
     if working_dir:
         terraparse.unzip_template(template_file, working_dir)
+        terraparse.flatten_files(working_dir)
         print(working_dir)
 
 
