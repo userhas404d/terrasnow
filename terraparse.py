@@ -47,15 +47,15 @@ def create_working_dir(req_sys_id):
 
 def unzip_template(template_file, working_dir):
     """Unzip the terraform template into the working directory."""
-    while not os.path.exists(working_dir):
+    template_file = './templates/' + template_file
+    while not os.path.exists(template_file):
         time.sleep(1)
-
-    if os.path.isfile(working_dir):
+    if os.path.isfile(template_file):
         with zipfile.ZipFile(template_file, "r") as zip_ref:
             zip_ref.extractall(working_dir)
         logging.info('Unzipped template to: {}'.format(working_dir))
     else:
-        raise ValueError("%s isn't a file!" % working_dir)
+        raise ValueError("%s isn't a file!" % template_file)
 
 
 # [Workflow acticity #2]
