@@ -115,7 +115,7 @@ def get_sorted_obj(json_obj):
 def get_tf_vars(input_string, target_dir):
     """Create variables json file."""
     try:
-        full_file_name = target_dir + 'terraform.tfvars'
+        full_file_name = target_dir + '/' + 'terraform.tfvars'
         json_obj = input_to_json(input_string)
         json_obj = get_sorted_obj(json_obj)
         write_contents(full_file_name, json_obj)
