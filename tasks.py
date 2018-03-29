@@ -8,9 +8,10 @@ import terrasnow
 from invoke import task
 
 # from snow_parse import combinator, input_to_json, get_sorted_obj
-
+FORMAT = ("[%(asctime)s][%(levelname)s]" +
+          "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s")
 logging.basicConfig(filename='tasks.log', level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+                    format=FORMAT)
 
 
 # @task
