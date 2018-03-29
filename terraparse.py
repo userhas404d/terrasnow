@@ -117,6 +117,7 @@ def get_tf_vars(input_string, target_dir):
     logging.info('input_string: {}'.format(input_string))
     logging.info('target_dir: {}'.format(target_dir))
     while not os.path.exists(target_dir):
+        logging.info('target dir not found. waiting.. ')
         time.sleep(1)
     if os.path.exists(target_dir):
         logging.info('target directory: {} exists.'.format(target_dir))
