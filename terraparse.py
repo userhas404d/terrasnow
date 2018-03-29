@@ -9,8 +9,10 @@ import zipfile
 
 import handlers.s3_handler as s3_handler
 
+FORMAT = ("[%(asctime)s][%(levelname)s]" +
+          "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s")
 logging.basicConfig(filename='terraparse.log', level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+                    format=FORMAT)
 
 templates_path = "./templates"
 
