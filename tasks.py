@@ -97,7 +97,8 @@ def terraform_plan(ctx, target_dir):
     responder = invoke.watchers.Responder(pattern=r"Enter a value:",
                                           response="\n")
     logging.info('terraform plan called')
-    print(ctx.run('terraform plan', watchers=[responder], warn=True))
+    print(ctx.run('terraform plan ' + target_dir, watchers=[responder],
+                  warn=True))
 
 
 @task
@@ -106,8 +107,8 @@ def terraform_apply(ctx, target_dir):
     logging.info('terraform apply called')
     responder = invoke.watchers.Responder(pattern=r"Enter a value:",
                                           response="\n")
-    print(ctx.run('terraform apply -auto-approve', watchers=[responder],
-                  warn=True))
+    print(ctx.run('terraform apply ' + target_dir + ' -auto-approve',
+                  watchers=[responder], warn=True))
 
 
 @task
