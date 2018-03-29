@@ -85,10 +85,10 @@ def create_var_file(ctx, input_string, target_dir):
 
 
 @task
-def terraform_init(ctx):
+def terraform_init(ctx, target_dir):
     """Call terraform init."""
     logging.info('terraform init called')
-    ctx.run("terraform init")
+    print(ctx.run("terraform init " + target_dir))
 
 
 @task
