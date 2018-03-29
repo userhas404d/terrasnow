@@ -97,7 +97,9 @@ def terraform_plan(ctx, target_dir):
     responder = invoke.watchers.Responder(pattern=r"Enter a value:",
                                           response="\n")
     logging.info('terraform plan called')
-    print(ctx.run('terraform plan ' + target_dir, watchers=[responder],
+    print(ctx.run('terraform plan -var-file=' + target_dir +
+                  '/terraform.tfvars ' + target_dir,
+                  watchers=[responder],
                   warn=True))
 
 
