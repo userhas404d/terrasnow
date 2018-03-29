@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import pathlib
+import shutil
 import time
 import zipfile
 
@@ -128,9 +129,20 @@ def get_tf_vars(input_string, target_dir):
         print('SUCCESS')
 
 
-# [workflow activity #3]
-# run terraform init
+def export_terraform_state(target_dir, sys_id, target_bucket):
+    """Upload terraform statefile to s3."""
+    # need to create a new bucket for terraform statefiles
+    state_file_path = target_dir + '/terraform.tfstate'
+    s3 = s3_handler.Handler('terraform.tfstate', sys_id, state_file_path,
+                            target_bucket)
+    s3.upload_file()
+    print('SUCCESS')
 
+
+def cleanup(target_dir):
+    """Remove the terraform folder."""
+    shutil.rmtree(target_dir)
+    print('SUCCESS')
 
 # get_template('lx-instance-test.zip', 'snow-terraform-testing')
 # get_tf_vars(snow_req_input, './templates/')

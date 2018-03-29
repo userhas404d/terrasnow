@@ -116,8 +116,15 @@ def terraform_apply(ctx, target_dir):
 
 
 @task
-def export_terraform_state(ctx, target_dir):
+def export_terraform_state(ctx, target_dir, sys_id, target_bucket):
     """Upload the terraform state to S3."""
+    terraparse.export_terraform_state(target_dir, sys_id, target_bucket)
+
+
+@task
+def tfleanup(ctx, target_dir):
+    """Remove the working dir."""
+    terraparse.cleanup(target_dir)
 
 
 @task
