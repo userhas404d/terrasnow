@@ -81,6 +81,8 @@ def initialize(ctx, template_file, source_bucket, req_sys_id):
 @task
 def create_var_file(ctx, input_string, target_dir):
     """Create tfvars file."""
+    logging.info('input_string: {}'.format(input_string))
+    logging.info('target_dir: {}'.format(target_dir))
     terraparse.get_tf_vars(input_string, target_dir)
 
 
