@@ -3,11 +3,9 @@
 import logging
 
 import invoke
-
-import catalog_creator.terrasnow as terrasnow
 import terraparse
+import terrasnow
 from invoke import task
-
 
 # from snow_parse import combinator, input_to_json, get_sorted_obj
 

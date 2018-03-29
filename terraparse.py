@@ -6,7 +6,7 @@ import os
 import pathlib
 import zipfile
 
-import catalog_creator.s3_handler as s3_handler
+import handlers.s3_handler as s3_handler
 
 logging.basicConfig(filename='terraparse.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
@@ -41,6 +41,7 @@ def create_working_dir(req_sys_id):
     else:
         logging.error('Working directory exists.')
         print('ERROR')
+        return None
 
 
 def unzip_template(template_file, working_dir):
@@ -96,6 +97,7 @@ def get_tf_vars(input_string, target_dir):
         json_obj = input_to_json(input_string)
         json_obj = get_sorted_obj(json_obj)
         write_contents(full_file_name, json_obj)
+        print('SUCCESS')
     except FileNotFoundError as e:
         logging.exception('target directory does not exist.')
         print('ERROR')

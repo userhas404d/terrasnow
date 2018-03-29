@@ -3,10 +3,10 @@
 import os
 import shutil
 
-import s3_handler
-import snow_cat_item
-import snowgetter
-import zip_handler
+import handlers.s3_handler as s3_handler
+import handlers.snow_cat_item as snow_cat_item
+import handlers.snowgetter as snowgetter
+import handlers.zip_handler as zip_handler
 
 # Should be static (set at the workflow level?)
 file_path = './templates/'
