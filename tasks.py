@@ -98,7 +98,8 @@ def terraform_plan(ctx, target_dir):
                                           response="\n")
     logging.info('terraform plan called')
     print(ctx.run('terraform plan -var-file=' + target_dir +
-                  '/terraform.tfvars ' + target_dir,
+                  '/terraform.tfvars -out=' + target_dir +
+                  '/terraform.tfstate ' + target_dir,
                   watchers=[responder],
                   warn=True))
 
