@@ -14,17 +14,6 @@ logging.basicConfig(filename='tasks.log', level=logging.INFO,
                     format=FORMAT)
 
 
-# @task
-# def var_convert(ctx, convert):
-#     """Convert snow vars to terraform template."""
-#     EVAL = combinator(get_sorted_obj(input_to_json(convert)))
-#     if EVAL == 'SUCCESS':
-#         logging.info('Successfully invoked snow_parse.')
-#     else:
-#         logging.exception('Error occured when calling snow_parse.' +
-#                           'View snow_parse logs for more information.')
-
-
 @task
 def get_attachment(ctx, user_name, user_pwd,
                    table_name, table_sys_id):
@@ -99,7 +88,7 @@ def terraform_plan(ctx, target_dir):
     logging.info('terraform plan called')
     print(ctx.run('terraform plan -var-file=' + target_dir +
                   '/terraform.tfvars -out=' + target_dir +
-                  '/terraform.tfstate ' + target_dir,
+                  '/terraform.plan ' + target_dir,
                   watchers=[responder],
                   warn=True))
 
