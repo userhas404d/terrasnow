@@ -94,15 +94,16 @@ def terraform_plan(ctx, target_dir):
 
 
 @task
-def terraform_apply(ctx, target_dir):
+def terraform_apply(ctx, sys_id, target_dir):
     """Call terraform apply."""
     logging.info('terraform apply called')
+    state_file = sys_id + '-' + 'terraform.tfstate'
     responder = invoke.watchers.Responder(pattern=r"Enter a value:",
                                           response="\n")
     print(ctx.run('terraform apply ' +
                   '-var-file=' + target_dir + '/terraform.tfvars ' +
                   '-auto-approve ' +
-                  '-state=' + target_dir + '/terraform.tfstate '
+                  '-state=' + target_dir + '/' + state_file
                   + target_dir,
                   watchers=[responder], warn=True))
 
