@@ -104,7 +104,9 @@ def terraform_apply(ctx, sys_id, target_dir):
                   '-var-file=' + target_dir + '/terraform.tfvars ' +
                   '-auto-approve ' +
                   '-state=' + target_dir + '/' + state_file + ' '
-                  + target_dir,
+                  + target_dir +
+                  ' && echo "Success" >> ' + target_dir + '/apply.status ' +
+                  '|| echo "Failed" >> ' + target_dir + '/apply.status',
                   watchers=[responder], warn=True))
 
 

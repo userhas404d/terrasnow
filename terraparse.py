@@ -129,15 +129,32 @@ def get_tf_vars(input_string, target_dir):
         print('SUCCESS')
 
 
+def terraform_apply_completion_check(target_dir):
+    """Looped check for terraform apply status."""
+    status_file = target_dir + '/apply.status'
+    while not os.path.exists(status_file):
+        time.sleep(1)
+    if os.path.isfile(status_file):
+        check = open(status_file, 'r')
+        if check.read() == 'Success':
+            check.close()
+            return True
+        else:
+            check.close()
+            return False
+
+
 def export_terraform_state(target_dir, sys_id, target_bucket):
     """Upload terraform statefile to s3."""
-    # need to create a new bucket for terraform statefiles
-    state_file = sys_id + '-' + 'terraform.tfstate'
-    state_file_path = target_dir + '/' + state_file
-    s3 = s3_handler.Handler(state_file, '', state_file_path,
-                            target_bucket)
-    s3.upload_file()
-    print('SUCCESS')
+    if terraform_apply_completion_check(target_dir):
+        state_file = sys_id + '-' + 'terraform.tfstate'
+        state_file_path = target_dir + '/' + state_file
+        s3 = s3_handler.Handler(state_file, '', state_file_path,
+                                target_bucket)
+        s3.upload_file()
+        print('SUCCESS')
+    else:
+        print('ERROR')
 
 
 def cleanup(target_dir):
