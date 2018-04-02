@@ -136,7 +136,7 @@ def terraform_apply_completion_check(target_dir):
         time.sleep(1)
     if os.path.isfile(status_file):
         check = open(status_file, 'r')
-        if check.read() == 'Success':
+        if 'Success' in check.read():
             check.close()
             return True
         else:
@@ -153,7 +153,9 @@ def export_terraform_state(target_dir, sys_id, target_bucket):
                                 target_bucket)
         s3.upload_file()
         print('SUCCESS')
+        logging.info('Uploaded state file to s3.')
     else:
+        logging.erro('Failed to upload state file to s3.')
         print('ERROR')
 
 
