@@ -103,7 +103,7 @@ def terraform_apply(ctx, sys_id, target_dir):
     print(ctx.run('terraform apply ' +
                   '-var-file=' + target_dir + '/terraform.tfvars ' +
                   '-auto-approve ' +
-                  '-state=' + target_dir + '/' + state_file
+                  '-state=' + target_dir + '/' + state_file + ' '
                   + target_dir,
                   watchers=[responder], warn=True))
 
