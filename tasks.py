@@ -113,6 +113,7 @@ def terraform_apply(ctx, sys_id, target_dir):
 @task
 def export_terraform_state(ctx, target_dir, sys_id, target_bucket):
     """Upload the terraform state to S3."""
+    logging.info('Exporting terraform state file.')
     terraparse.export_terraform_state(target_dir, sys_id, target_bucket)
 
 

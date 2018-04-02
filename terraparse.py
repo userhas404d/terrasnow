@@ -131,15 +131,18 @@ def get_tf_vars(input_string, target_dir):
 
 def terraform_apply_completion_check(target_dir):
     """Looped check for terraform apply status."""
+    logging.info('confirming terraform apply completed.')
     status_file = target_dir + '/apply.status'
     while not os.path.exists(status_file):
         time.sleep(1)
     if os.path.isfile(status_file):
         check = open(status_file, 'r')
         if 'Success' in check.read():
+            logging.info('terraform apply exucted successfully.')
             check.close()
             return True
         else:
+            logging.error('terraform apply exuction encounterd errors.')
             check.close()
             return False
 
