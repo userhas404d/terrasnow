@@ -58,14 +58,19 @@ class Handler(object):
     def s3_file_check(self):
         """Check if file exists in bucket."""
         response = s3.list_objects(Bucket=self.target_bucket)
-        if not any(d['Key'] == self.upload_file_name
-                   for d in response['Contents']):
-            logging.info('file: {} not in bucket.'.format(
-                         self.upload_file_name))
+        try:
+            if not any(d['Key'] == self.upload_file_name
+                       for d in response['Contents']):
+                logging.info('file: {} not in bucket.'.format(
+                             self.upload_file_name))
+                return True
+            else:
+                logging.info('file: {} in bucket.'.format(
+                    self.upload_file_name))
+                return False
+        except KeyError as e:
+            logging.info('Bucket is empty.')
             return True
-        else:
-            logging.info('file: {} in bucket.'.format(self.upload_file_name))
-            return False
 
     def get_obj_uri(self):
         """Create object URI."""
