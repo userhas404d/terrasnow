@@ -132,8 +132,9 @@ def get_tf_vars(input_string, target_dir):
 def export_terraform_state(target_dir, sys_id, target_bucket):
     """Upload terraform statefile to s3."""
     # need to create a new bucket for terraform statefiles
-    state_file_path = target_dir + '/terraform.tfstate'
-    s3 = s3_handler.Handler('terraform.tfstate', sys_id, state_file_path,
+    state_file = sys_id + '-' + 'terraform.tfstate'
+    state_file_path = target_dir + '/' + state_file
+    s3 = s3_handler.Handler(state_file, '', state_file_path,
                             target_bucket)
     s3.upload_file()
     print('SUCCESS')
