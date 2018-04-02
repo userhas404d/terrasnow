@@ -99,8 +99,11 @@ def terraform_apply(ctx, target_dir):
     logging.info('terraform apply called')
     responder = invoke.watchers.Responder(pattern=r"Enter a value:",
                                           response="\n")
-    print(ctx.run('terraform apply -var-file=' + target_dir +
-                  '/terraform.tfvars -auto-approve ' + target_dir,
+    print(ctx.run('terraform apply ' +
+                  '-var-file=' + target_dir + '/terraform.tfvars ' +
+                  '-auto-approve ' +
+                  '-state=' + target_dir + '/terraform.tfstate '
+                  + target_dir,
                   watchers=[responder], warn=True))
 
 
