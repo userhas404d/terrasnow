@@ -70,14 +70,14 @@ class zip_parser(object):
         for var_list in self.json_obj[0]['variable']:
             for key in var_list:
                 var_name = key
-                mandatory_toggle = 'False'
+                mandatory_toggle = 'false'
                 if var_list[key][0]['type'] == 'string':
                     obj_type = 'String'
                 try:
                     def_val = var_list[key][0]['default']
                     order_val = 1000
                 except KeyError as e:
-                    mandatory_toggle = 'True'
+                    mandatory_toggle = 'true'
                     counter = counter + 10
                     order_val = counter
                     def_val = ""
