@@ -55,7 +55,6 @@ def unzip_and_create_vars(user_name, user_pwd, file_name, cat_sys_id):
     my_zip = zip_handler.zip_parser(file_name, file_path, cat_sys_id)
     my_zip.unzip()
     my_zip.hcl_to_json(my_zip.tf_var_loc)
-    my_zip.hcl_to_json(my_zip.tf_out_loc)
     var_list = my_zip.json_to_servicenow()
 
     # push category item variables to snow
