@@ -213,7 +213,7 @@ def make_cat_item(cat_item_data, user_name, user_pwd):
                          user_name, user_pwd)
     logging.info('Defined snowgetter parameters.')
     response = record.make_POST_request()
-    logging.info('Made get request via snowgetter.')
+    logging.info('Made post request via snowgetter.')
     return sys_id_check(response)
 
 
@@ -224,7 +224,18 @@ def make_cat_var(var_item_data, user_name, user_pwd):
                          user_name, user_pwd)
     logging.info('Defined snowgetter parameters.')
     response = record.make_POST_request()
-    logging.info('Made get request via snowgetter.')
+    logging.info('Made post request via snowgetter.')
+    return sys_id_check(response)
+
+
+def make_client_script(client_script_data, user_name, user_pwd):
+    """Create a category item variable."""
+    logging.info('submitting catalog script creation request.')
+    record = snow_record('table/catalog_script_client', "", client_script_data,
+                         user_name, user_pwd)
+    logging.info('Defined snowgetter parameters.')
+    response = record.make_POST_request()
+    logging.info('Made post request via snowgetter.')
     return sys_id_check(response)
 
 
