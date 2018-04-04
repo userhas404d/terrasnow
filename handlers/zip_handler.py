@@ -66,14 +66,20 @@ class zip_parser(object):
 
     def json_to_servicenow(self):
         """Convert JOSN formatted terraform vars to ServiceNow vars."""
+        counter = 0
         for var_list in self.json_obj[0]['variable']:
             for key in var_list:
                 var_name = key
+                mandatory_toggle = 'False'
                 if var_list[key][0]['type'] == 'string':
                     obj_type = 'String'
                 try:
                     def_val = var_list[key][0]['default']
+                    order_val = 1000
                 except KeyError as e:
+                    mandatory_toggle = 'True'
+                    counter = counter + 10
+                    order_val = counter
                     def_val = ""
                 desc = var_list[key][0]['description']
                 self.cat_item_list.append(
@@ -84,9 +90,12 @@ class zip_parser(object):
                        "question_text": var_name,
                        "tooltip": desc,
                        "default_value": def_val,
-                       "help_text": desc
+                       "help_text": desc,
+                       "order": order_val,
+                       "mandatory": mandatory_toggle
                        })
         return self.cat_item_list
 
-# json_obj = hcl_to_json('variables.tf')
+
+# print(hcl_to_json('variables.tf'))
 # print(json_to_servicenow(json_obj, "12345"))
