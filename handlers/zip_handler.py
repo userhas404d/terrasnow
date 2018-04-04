@@ -86,25 +86,6 @@ class zip_parser(object):
                        "default_value": def_val,
                        "help_text": desc
                        })
-        for var_list in self.json_obj[1]['output']:
-            for key in var_list:
-                var_name = key
-                obj_type = 'String'
-                try:
-                    def_val = var_list[key][0]['value']
-                except KeyError as e:
-                    def_val = ""
-                desc = var_list[key][0]['description']
-                self.cat_item_list.append(
-                     {
-                       "name": 'tfo_' + var_name.replace('-', '_'),
-                       "type": obj_type,
-                       "cat_item": self.cat_item_id,
-                       "question_text": var_name,
-                       "tooltip": desc,
-                       "default_value": def_val,
-                       "help_text": desc
-                       })
         return self.cat_item_list
 
 # json_obj = hcl_to_json('variables.tf')
