@@ -16,7 +16,6 @@ class zip_parser(object):
         self.zip_name = zip_name
         self.zip_path = zip_path
         self.cat_item_id = cat_item_id
-        self.cat_item_list = []
         self.full_path = self.zip_path + zip_name
         self.json_obj = []
         self.tf_var_file = 'variables.tf'
@@ -62,4 +61,5 @@ class zip_parser(object):
                                  shell=True,
                                  universal_newlines=True,
                                  stdout=subprocess.PIPE)
-        return self.json_obj.append(json.loads(process.stdout))
+        self.json_obj.append(json.loads(process.stdout))
+        return self.json_obj
