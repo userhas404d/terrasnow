@@ -5,6 +5,8 @@ import os
 import shutil
 
 import handlers.s3_handler as s3_handler
+import handlers.sn_client_script_handler as sn_client_script_handler
+import handlers.sn_var_handler as sn_var_handler
 import handlers.snow_cat_item as snow_cat_item
 import handlers.snowgetter as snowgetter
 import handlers.zip_handler as zip_handler
@@ -54,12 +56,19 @@ def unzip_and_create_vars(user_name, user_pwd, file_name, cat_sys_id):
     # unzip the downloaded file and create category item variables
     my_zip = zip_handler.zip_parser(file_name, file_path, cat_sys_id)
     my_zip.unzip()
-    my_zip.hcl_to_json(my_zip.tf_var_loc)
-    var_list = my_zip.get_vars()
+    json_obj = my_zip.hcl_to_json(my_zip.tf_var_loc)
+    sn_vars = sn_var_handler.SnowVars(json_obj, cat_sys_id)
+    var_list = sn_vars.get_vars()
 
     # push category item variables to snow
     for item in var_list:
         snowgetter.make_cat_var(item, user_name, user_pwd)
+
+    # create client scripts
+    script_client = sn_client_script_handler.SnowClientScript(cat_sys_id)
+    client_scripts = script_client.get_scripts()
+    for script in client_scripts:
+        snowgetter.make_client_script(script, user_name, user_pwd)
 
     return my_zip.full_path
 
