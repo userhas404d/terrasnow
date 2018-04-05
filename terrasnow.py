@@ -125,10 +125,3 @@ def cleanup(zip_full_path):
     except FileNotFoundError as e:
         logging.exception('directory is not present.')
         return "tmp directory not present."
-
-
-user_name = 'rest_api_tester'
-user_pwd = '#Q@65Px6FQ5^nA2vmfq'
-file_name = 'lx-instance.zip'
-cat_sys_id = '848b9b41d5d91300777fb6982ecf44ad'
-unzip_and_create_vars(user_name, user_pwd, file_name, cat_sys_id)
