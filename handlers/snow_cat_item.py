@@ -24,7 +24,7 @@ class SnowCatalogItem(object):
         return {"name": self.name,
                 "category": self.category,
                 "sc_catalogs": self.catalogs,
-                "description": self.description,
+                "short_description": self.description,
                 "workflow": self.workflow,
                 "active": self.isactive
                 }
