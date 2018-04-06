@@ -135,4 +135,5 @@ def terraform_destroy(ctx):
 def get_aws_info(ctx, target_role, duration):
     """Call aws info getter."""
     logging.info('aws_info_getter called')
-    print(aws_info_getter.assumed_role_get_everything(target_role, duration))
+    print(aws_info_getter.assumed_role_get_everything(target_role,
+                                                      int(duration)))
