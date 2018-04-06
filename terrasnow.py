@@ -51,7 +51,7 @@ def create_catalog_item(user_name, user_pwd, table_name, table_sys_id,
     return cat_sys_id
 
 
-def unzip_and_create_vars(user_name, user_pwd, file_name, cat_sys_id):
+def unzip_and_create_vars(user_name, user_pwd, file_name, cat_sys_id, os_type):
     """Unzip template and create catalog item vars."""
     # unzip the downloaded file and create category item variables
     my_zip = zip_handler.zip_parser(file_name, file_path, cat_sys_id)
@@ -69,6 +69,17 @@ def unzip_and_create_vars(user_name, user_pwd, file_name, cat_sys_id):
     client_scripts = script_client.get_scripts()
     for script in client_scripts:
         snowgetter.make_client_script(script, user_name, user_pwd)
+
+    var_item_data = {
+       "name": 'gen_OS_Type',
+       "type": 'String',
+       "cat_item": cat_sys_id,
+       "question_text": 'OS Type',
+       "tooltip": 'OS Type',
+       "default_value": os_type,
+       "help_text": 'OS Type'
+       }
+    snowgetter.make_cat_var(var_item_data, user_name, user_pwd)
 
     return my_zip.full_path
 
