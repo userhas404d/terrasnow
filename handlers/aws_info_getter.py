@@ -14,6 +14,7 @@ def get_assume_role_input(role_arn, duration):
     """Create input for assume_role."""
     return {
         'RoleArn': role_arn,
+        'RoleSessionName': 'get_account_info_script',
         'DurationSeconds': duration
     }
 
@@ -188,6 +189,6 @@ def assumed_role_get_everything(role_to_assume_arn, duration):
     return get_everything(elevated_ec2_client)
 
 
-# assumed_role_get_everything('asdf', 900)
+# aassumed_role_get_everything('asdf', 900)
 # print(get_everything())
 # print(date_check('2018-01-14T19:30:27.000Z'))
