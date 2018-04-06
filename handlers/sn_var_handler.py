@@ -4,11 +4,12 @@
 class SnowVars(object):
     """Terraform to ServiceNow cariable converter."""
 
-    def __init__(self, json_obj, cat_item_id):
+    def __init__(self, json_obj, cat_item_id, os_type):
         """Initialize."""
         self.cat_item_id = cat_item_id
         self.cat_item_list = []
         self.json_obj = json_obj
+        self.os_type = os_type
         self.counter = 0
 
     def parse_tf_vars(self):
@@ -24,6 +25,7 @@ class SnowVars(object):
                     order_val = 1000
                 except KeyError as e:
                     mandatory_toggle = 'true'
+                    obj_type = 'Select Box'
                     self.counter = self.counter + 10
                     order_val = self.counter
                     def_val = ""
@@ -57,10 +59,27 @@ class SnowVars(object):
                "order": self.counter
                })
 
+    def create_os_type_var(self):
+        """Create the advanced mode toggle."""
+        # requires json_to_servicenow run first in order update the counter to
+        # match the number of required vars
+        self.counter = self.counter + 10
+        self.cat_item_list.append(
+             {
+                "name": 'gen_OS_Type',
+                "type": 'String',
+                "cat_item": self.cat_item_id,
+                "question_text": 'OS Type',
+                "tooltip": 'OS Type',
+                "default_value": self.os_type,
+                "help_text": 'OS Type'
+                })
+
     def get_vars(self):
         """Preform correct order of operations and return variables."""
         self.parse_tf_vars()
         self.create_adv_toggle()
+        self.create_os_type_var()
         return self.cat_item_list
 
 # print(hcl_to_json('variables.tf'))
