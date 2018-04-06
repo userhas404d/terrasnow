@@ -2,7 +2,7 @@
 
 import logging
 
-import aws_info_getter
+import handlers.aws_info_getter as aws_info_getter
 import invoke
 import terraparse
 import terrasnow
