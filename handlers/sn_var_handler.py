@@ -25,7 +25,8 @@ class SnowVars(object):
                     order_val = 1000
                 except KeyError as e:
                     mandatory_toggle = 'true'
-                    obj_type = 'Select Box'
+                    if var_name != 'Name':
+                        obj_type = 'Select Box'
                     self.counter = self.counter + 10
                     order_val = self.counter
                     def_val = ""
@@ -63,7 +64,6 @@ class SnowVars(object):
         """Create the advanced mode toggle."""
         # requires json_to_servicenow run first in order update the counter to
         # match the number of required vars
-        self.counter = self.counter + 10
         self.cat_item_list.append(
              {
                 "name": 'gen_OS_Type',
@@ -72,7 +72,8 @@ class SnowVars(object):
                 "question_text": 'OS Type',
                 "tooltip": 'OS Type',
                 "default_value": self.os_type,
-                "help_text": 'OS Type'
+                "help_text": 'OS Type',
+                "order": 1000
                 })
 
     def get_vars(self):
