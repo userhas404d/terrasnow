@@ -1,6 +1,7 @@
 """Retrieve JSON obj of required account information."""
 
 import datetime
+import json
 import logging
 
 import boto3
@@ -186,7 +187,7 @@ def assumed_role_get_everything(role_to_assume_arn, duration):
     elevated_ec2_client = get_elevated_session(**elevated_session_input)
     logging.info("Retrieved elevated ec2 client.")
 
-    return get_everything(elevated_ec2_client)
+    return json.dumps(get_everything(elevated_ec2_client))
 
 
 # aassumed_role_get_everything('asdf', 900)
