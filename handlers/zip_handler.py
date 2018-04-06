@@ -52,6 +52,8 @@ class zip_parser(object):
                 raise
         except zipfile.BadZipFile as e:
             print("ERROR: Bad zip file")
+        except FileNotFoundError as e:
+            print("ERROR: file not found")
 
     def hcl_to_json(self, tf_loc):
         """Convert HCL format files to JSON."""
