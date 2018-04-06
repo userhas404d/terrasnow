@@ -1,17 +1,50 @@
 """Retrieve JSON obj of required account information."""
 
 import datetime
+import logging
 
 import boto3
 import dateutil.parser
 
 ec2 = boto3.client('ec2')
+sts = boto3.client('sts')
 
 
-def get_sgs():
+def get_assume_role_input(role_arn, duration):
+    """Create input for assume_role."""
+    return {
+        'RoleArn': role_arn,
+        'DurationSeconds': duration
+    }
+
+
+def assume_role(**kwargs):
+    """Assume stack update role."""
+    response = sts.assume_role(**kwargs)
+    logging.info("assume_role: {}".format(response))
+    return response
+
+
+def get_elevated_session_input(response):
+    """Create input for get_elevated_session."""
+    return {
+     'aws_access_key_id': response['Credentials']['AccessKeyId'],
+     'aws_secret_access_key': response['Credentials']['SecretAccessKey'],
+     'aws_session_token': response['Credentials']['SessionToken']
+    }
+
+
+def get_elevated_session(**kwargs):
+    """Create new boto3 session with assumed role."""
+    data_retrieval_session = boto3.Session(**kwargs)
+    elevated_ec2_client = data_retrieval_session.client('ec2')
+    return elevated_ec2_client
+
+
+def get_sgs(assumed_role):
     """Retrieve list of security groups."""
     sgs = []
-    response = ec2.describe_security_groups()
+    response = assumed_role.describe_security_groups()
     for item in response['SecurityGroups']:
         security_group = {}
         for _key in item.items():
@@ -22,10 +55,10 @@ def get_sgs():
     return sgs
 
 
-def get_linux_amis():
+def get_linux_amis(assumed_role):
     """Retrieve list of linux amis."""
     amis = []
-    response = ec2.describe_images(
+    response = assumed_role.describe_images(
         Filters=[
             {'Name': 'state', 'Values': ['available']},
             {'Name': 'is-public', 'Values': ['true']},
@@ -49,10 +82,10 @@ def get_linux_amis():
     return amis
 
 
-def get_windows_amis():
+def get_windows_amis(assumed_role):
     """Retrieve list of windows amis."""
     amis = []
-    response = ec2.describe_images(
+    response = assumed_role.describe_images(
         Filters=[
             {'Name': 'state', 'Values': ['available']},
             {'Name': 'is-public', 'Values': ['true']},
@@ -93,10 +126,10 @@ def date_check(date):
     return date + margin >= today
 
 
-def get_key_pairs():
+def get_key_pairs(assumed_role):
     """Retrieve list of key pairs."""
     keys = []
-    response = ec2.describe_key_pairs()
+    response = assumed_role.describe_key_pairs()
     for item in response['KeyPairs']:
         key = {}
         for _key in item.items():
@@ -106,10 +139,10 @@ def get_key_pairs():
     return keys
 
 
-def get_vpcs():
+def get_vpcs(assumed_role):
     """Retrieve list of vpcs."""
     vpcs = []
-    response = ec2.describe_vpcs(
+    response = assumed_role.describe_vpcs(
         Filters=[
             {'Name': 'state', 'Values': ['available']}
         ])
@@ -127,20 +160,34 @@ def get_vpcs():
     return vpcs
 
 
-def get_everything():
+def get_everything(assumed_role):
     """Return complete json object with all info."""
     sorted_dict = {}
 
     sorted_dict['amis'] = {
-                           "linux": get_linux_amis(),
-                           "windows": get_windows_amis()
+                           "linux": get_linux_amis(assumed_role),
+                           "windows": get_windows_amis(assumed_role)
                            }
-    sorted_dict['key_paris'] = get_key_pairs()
-    sorted_dict['vpcs'] = get_vpcs()
-    sorted_dict['security_groups'] = get_sgs()
+    sorted_dict['key_paris'] = get_key_pairs(assumed_role)
+    sorted_dict['vpcs'] = get_vpcs(assumed_role)
+    sorted_dict['security_groups'] = get_sgs(assumed_role)
 
     return sorted_dict
 
 
+def assumed_role_get_everything(role_to_assume_arn, duration):
+    """Return complete json object with all info."""
+    assume_role_input = get_assume_role_input(role_to_assume_arn, duration)
+    assume_role_response = assume_role(**assume_role_input)
+    logging.info("Assumed target role for {} seconds".format(duration))
+
+    elevated_session_input = get_elevated_session_input(assume_role_response)
+    elevated_ec2_client = get_elevated_session(**elevated_session_input)
+    logging.info("Retrieved elevated ec2 client.")
+
+    return get_everything(elevated_ec2_client)
+
+
+# assumed_role_get_everything('asdf', 900)
 # print(get_everything())
 # print(date_check('2018-01-14T19:30:27.000Z'))
