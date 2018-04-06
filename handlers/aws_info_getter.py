@@ -170,7 +170,7 @@ def get_everything(assumed_role):
                            "linux": get_linux_amis(assumed_role),
                            "windows": get_windows_amis(assumed_role)
                            }
-    sorted_dict['key_paris'] = get_key_pairs(assumed_role)
+    sorted_dict['key_pairs'] = get_key_pairs(assumed_role)
     sorted_dict['vpcs'] = get_vpcs(assumed_role)
     sorted_dict['security_groups'] = get_sgs(assumed_role)
 
