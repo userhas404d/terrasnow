@@ -36,11 +36,11 @@ def create_catalog_item(ctx, user_name, user_pwd, table_name, table_sys_id,
 
 @task
 def unzip_and_create_vars(ctx, user_name, user_pwd, file_name, cat_sys_id,
-                          os_type):
+                          os_toggle):
     """Unzip template and create catalog item vars."""
     # returns the full path of the zip file's location on the local disk
     print(terrasnow.unzip_and_create_vars(user_name, user_pwd, file_name,
-                                          cat_sys_id, os_type))
+                                          cat_sys_id, os_toggle))
 
 
 @task
