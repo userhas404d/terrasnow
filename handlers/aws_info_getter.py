@@ -7,8 +7,6 @@ import dateutil.parser
 
 ec2 = boto3.client('ec2')
 
-image_name = 'spel-minimal-centos-7.4-hvm-.*x86_64-gp2'
-
 
 def get_sgs():
     """Retrieve list of security groups."""
@@ -145,5 +143,4 @@ def get_everything():
 
 
 # print(get_everything())
-print(get_everything())
 # print(date_check('2018-01-14T19:30:27.000Z'))

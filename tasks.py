@@ -2,6 +2,7 @@
 
 import logging
 
+import aws_info_getter
 import invoke
 import terraparse
 import terrasnow
@@ -128,3 +129,10 @@ def terraform_destroy(ctx):
     """Call terraform destroy."""
     logging.info('terraform destroy called')
     ctx.run('terraform destroy')
+
+
+@task
+def get_aws_info(ctx):
+    """Call aws info getter."""
+    logging.info('aws_info_getter called')
+    print(aws_info_getter.get_everything())
