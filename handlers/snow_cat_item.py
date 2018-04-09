@@ -16,9 +16,6 @@ class SnowCatalogItem(object):
         self.description = description
         # terraform deployment workflow
         self.workflow = "8c804bc78d051300777fcdb2187743ec"
-        self.workflowlink = "https://{0}/api/now/table/wf_workflow/{1}".format(
-                             "snow.snow-pilot.dicelab.net",
-                             self.workflow)
         self.isactive = "true"
 
     def data(self):
@@ -28,9 +25,6 @@ class SnowCatalogItem(object):
                 "category": self.category,
                 "sc_catalogs": self.catalogs,
                 "short_description": self.description,
-                "workflow": {
-                    "link": self.workflowlink,
-                    "value": "8c804bc78d051300777fcdb2187743ec"
-                            },
+                "workflow": self.workflow,
                 "active": self.isactive
                 }
