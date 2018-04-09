@@ -82,9 +82,14 @@ class SnowClientScript(object):
 
         function setValues(json_obj){
            //Type appropriate comment here, and begin script below
-           jslog(typeof json_obj);
-           jslog('made it this far');
-           jslog('json_obj: '+json_obj);
+           // jslog(typeof json_obj);
+           // jslog('made it this far');
+           // jslog('json_obj: '+json_obj);
+           g_form.addOption('tfv_AmiId', '-- None --');
+           g_form.addOption('tfv_AmiDistro', '-- None --');
+           g_form.addOption('tfv_KeyPairName', '-- None --');
+           g_form.addOption('tfv_SecurityGroupIds', '-- None --');
+           g_form.addOption('tfv_SubnetId', '-- None --');
            for (var list in json_obj['amis']){
            //gs.log(list);
              for (var key in json_obj['amis'][list]){
