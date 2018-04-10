@@ -62,8 +62,7 @@ class SnowVars(object):
 
     def create_os_type_var(self):
         """Create the advanced mode toggle."""
-        # requires json_to_servicenow run first in order update the counter to
-        # match the number of required vars
+        # create operating system type selection check box
         self.cat_item_list.append(
              {
                 "name": 'gen_OS_Type',
@@ -73,6 +72,21 @@ class SnowVars(object):
                 "tooltip": 'OS Type',
                 "default_value": self.os_type,
                 "help_text": 'OS Type',
+                "order": 1000
+                })
+
+    def create_gen_AwsAccountInfo(self):
+        """Create the advanced mode toggle."""
+        # requires json_to_servicenow run first in order update the counter to
+        # match the number of required vars
+        self.cat_item_list.append(
+             {
+                "name": 'gen_AwsAccountInfo',
+                "type": 'Multi Line Text',
+                "cat_item": self.cat_item_id,
+                "question_text": 'AWS account info',
+                "tooltip": 'AWS account info',
+                "help_text": 'AWS account info',
                 "order": 1000
                 })
 
