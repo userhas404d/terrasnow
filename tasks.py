@@ -79,7 +79,8 @@ def create_var_file(ctx, input_string, target_dir):
 def terraform_init(ctx, target_dir):
     """Call terraform init."""
     logging.info('terraform init called')
-    print(ctx.run("terraform init " + target_dir, warn=True))
+    with ctx.cd(target_dir):
+        print(ctx.run("terraform init ", warn=True))
 
 
 @task
@@ -88,11 +89,11 @@ def terraform_plan(ctx, target_dir):
     responder = invoke.watchers.Responder(pattern=r"Enter a value:",
                                           response="\n")
     logging.info('terraform plan called')
-    print(ctx.run('terraform plan -var-file=' + target_dir +
-                  '/terraform.tfvars -out=' + target_dir +
-                  '/terraform.plan ' + target_dir,
-                  watchers=[responder],
-                  warn=True))
+    with ctx.cd(target_dir):
+        print(ctx.run('terraform plan -var-file=terraform.tfvars' +
+                      '-out=terraform.plan ',
+                      watchers=[responder],
+                      warn=True))
 
 
 @task
@@ -102,14 +103,15 @@ def terraform_apply(ctx, sys_id, target_dir):
     state_file = sys_id + '-' + 'terraform.tfstate'
     responder = invoke.watchers.Responder(pattern=r"Enter a value:",
                                           response="\n")
-    print(ctx.run('terraform apply ' +
-                  '-var-file=' + target_dir + '/terraform.tfvars ' +
-                  '-auto-approve ' +
-                  '-state=' + target_dir + '/' + state_file + ' '
-                  + target_dir +
-                  ' && echo "Success" >> ' + target_dir + '/apply.status ' +
-                  '|| echo "Failed" >> ' + target_dir + '/apply.status',
-                  watchers=[responder], warn=True))
+    with ctx.cd(target_dir):
+        print(ctx.run('terraform apply ' +
+                      '-var-file=terraform.tfvars ' +
+                      '-auto-approve ' +
+                      '-state=' + state_file +
+                      ' && echo "Success" >> apply.status ' +
+                      '|| echo "Failed" >> apply.status',
+                      watchers=[responder],
+                      warn=True))
 
 
 @task
