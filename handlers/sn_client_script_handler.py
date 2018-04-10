@@ -107,8 +107,8 @@ class SnowClientScript(object):
           }
 
           for (var key1 in json_obj['vpcs']){
-              if(json_obj['vpcs'][key1]['Name']){
-              g_form.addOption('tfv_SubnetId',json_obj['vpcs'][key1]['VpcId'], json_obj['vpcs'][key1]['Name']);
+              if(json_obj['subnets'][key1]['Name']){
+              g_form.addOption('tfv_SubnetId',json_obj['subnets'][key1]['SubnetId'], json_obj['subnets'][key1]['Name']);
             }
           }
 

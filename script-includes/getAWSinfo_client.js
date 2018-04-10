@@ -38,9 +38,14 @@ function getWorkflowResults(workflowGlideRecord){
 
 function setValues(json_obj){
    //Type appropriate comment here, and begin script below
-   jslog(typeof json_obj);
-   jslog('made it this far');
-   jslog('json_obj: '+json_obj);
+   // jslog(typeof json_obj);
+   // jslog('made it this far');
+   // jslog('json_obj: '+json_obj);
+   g_form.addOption('tfv_AmiId', '-- None --');
+   g_form.addOption('tfv_AmiDistro', '-- None --');
+   g_form.addOption('tfv_KeyPairName', '-- None --');
+   g_form.addOption('tfv_SecurityGroupIds', '-- None --');
+   g_form.addOption('tfv_SubnetId', '-- None --');
    for (var list in json_obj['amis']){
    //gs.log(list);
      for (var key in json_obj['amis'][list]){
@@ -57,9 +62,9 @@ function setValues(json_obj){
   	}
   }
 
-  for (var key1 in json_obj['vpcs']){
-  	if(json_obj['vpcs'][key1]['Name']){
-  		g_form.addOption('tfv_SubnetId',json_obj['vpcs'][key1]['VpcId'], json_obj['vpcs'][key1]['Name']);
+  for (var key1 in json_obj['subnets']){
+  	if(json_obj['subnets'][key1]['Name']){
+  		g_form.addOption('tfv_SubnetId',json_obj['subnets'][key1]['SubnetId'], json_obj['subnets'][key1]['Name']);
   	}
   }
 

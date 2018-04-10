@@ -141,25 +141,45 @@ def get_key_pairs(assumed_role):
     return keys
 
 
-def get_vpcs(assumed_role):
-    """Retrieve list of vpcs."""
-    vpcs = []
-    response = assumed_role.describe_vpcs(
+# def get_vpcs(assumed_role):
+#     """Retrieve list of vpcs."""
+#     vpcs = []
+#     response = assumed_role.describe_vpcs(
+#         Filters=[
+#             {'Name': 'state', 'Values': ['available']}
+#         ])
+#     for item in response['Vpcs']:
+#         vpc = {}
+#         for _key in item.items():
+#             try:
+#                 if item['Tags'][0]['Value']:
+#                     vpc['Name'] = item['Tags'][0]['Value']
+#                     vpc['VpcId'] = item['VpcId']
+#             except KeyError as e:
+#                 continue
+#             if vpc:
+#                 vpcs.append(vpc)
+#     return vpcs
+
+
+def get_subnets(assumed_role):
+    """Retrieve list of subnets."""
+    subnets = []
+    response = assumed_role.describe_subnets(
         Filters=[
             {'Name': 'state', 'Values': ['available']}
         ])
-    for item in response['Vpcs']:
-        vpc = {}
-        for _key in item.items():
-            try:
-                if item['Tags'][0]['Value']:
-                    vpc['Name'] = item['Tags'][0]['Value']
-                    vpc['VpcId'] = item['VpcId']
-            except KeyError as e:
-                continue
-            if vpc:
-                vpcs.append(vpc)
-    return vpcs
+    for item in response['Subnets']:
+        subnet = {}
+        try:
+            if item['Tags'][0]['Value']:
+                subnet['Name'] = item['Tags'][0]['Value']
+                subnet['SubnetId'] = item['SubnetId']
+        except KeyError as e:
+            continue
+        if subnet:
+            subnets.append(subnet)
+    return(subnets)
 
 
 def get_everything(assumed_role):
@@ -171,7 +191,7 @@ def get_everything(assumed_role):
                            "windows": get_windows_amis(assumed_role)
                            }
     sorted_dict['key_pairs'] = get_key_pairs(assumed_role)
-    sorted_dict['vpcs'] = get_vpcs(assumed_role)
+    sorted_dict['subnets'] = get_subnets(assumed_role)
     sorted_dict['security_groups'] = get_sgs(assumed_role)
 
     return sorted_dict
