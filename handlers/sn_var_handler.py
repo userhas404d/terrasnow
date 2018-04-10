@@ -95,7 +95,5 @@ class SnowVars(object):
         self.parse_tf_vars()
         self.create_adv_toggle()
         self.create_os_type_var()
+        self.create_gen_AwsAccountInfo()
         return self.cat_item_list
-
-# print(hcl_to_json('variables.tf'))
-# print(json_to_servicenow(json_obj, "12345"))
