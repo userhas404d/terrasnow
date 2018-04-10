@@ -1,5 +1,6 @@
 """Handle client script creations."""
 
+import logging
 import os
 
 
@@ -10,7 +11,7 @@ class SnowClientScript(object):
         """Initialize."""
         self.cat_item_id = cat_item_id
         self.client_script_list = []
-        self.sn_javascript_path = '../sn_javascript/'
+        self.sn_javascript_path = '/sn_javascript/'
         self.display_toggle_script = (
           self.getJavascriptText('createDisplayToggleOnload.js'))
         self.hide_generic_vars_script = (
@@ -20,10 +21,15 @@ class SnowClientScript(object):
 
     def getJavascriptText(self, target_file):
         """Return text of the target file."""
-        jspath = os.path.abspath(os.path.relpath(self.sn_javascript_path))
-        with open(jspath + '/' + target_file) as file:
-            script_text = file.read()
-        return script_text
+        try:
+            jspath = os.getcwd() + self.sn_javascript_path
+            with open(jspath + '/' + target_file) as file:
+                script_text = file.read()
+            return script_text
+        except FileNotFoundError as e:
+            logging.exception('File not found')
+            print('ERROR')
+            raise
 
     def create_display_toggle(self):
         """Create the dispaly toggle client script."""
