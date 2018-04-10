@@ -52,6 +52,7 @@ def get_sgs(assumed_role):
         for _key in item.items():
             security_group['Name'] = item['GroupName']
             security_group['GroupId'] = item['GroupId']
+            security_group['VpcId'] = item['VpcId']
         if security_group:
             sgs.append(security_group)
     return sgs
@@ -175,6 +176,7 @@ def get_subnets(assumed_role):
             if item['Tags'][0]['Value']:
                 subnet['Name'] = item['Tags'][0]['Value']
                 subnet['SubnetId'] = item['SubnetId']
+                subnet['VpcId'] = item['VpcId']
         except KeyError as e:
             continue
         if subnet:
