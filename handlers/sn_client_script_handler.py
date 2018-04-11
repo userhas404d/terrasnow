@@ -67,8 +67,8 @@ class SnowClientScript(object):
 
     def create_subnet_filter(self):
         """Create the dispaly toggle client script."""
-        self.create_client_script(name="populate dropdowns",
-                                  script_type="onLoad",
+        self.create_client_script(name="subnet filter",
+                                  script_type="onChange",
                                   cat_var="tfv_SecurityGroupIds",
                                   script=self.getJavascriptText(
                                     'filterSubnetsOnChange.js'))
