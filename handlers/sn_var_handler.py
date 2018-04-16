@@ -13,7 +13,7 @@ class SnowVars(object):
         self.counter = 0
 
     def create_var(self, var_name, obj_type, q_txt, t_tip, h_txt,
-                   desc, def_val, order_val, m_toggle):
+                   def_val, order_val, m_toggle):
         """Create catalog item variable."""
         self.cat_item_list.append(
              {
