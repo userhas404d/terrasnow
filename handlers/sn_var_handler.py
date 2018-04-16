@@ -13,7 +13,7 @@ class SnowVars(object):
         self.counter = 0
 
     def create_var(self, var_name, obj_type, q_txt, t_tip, h_txt,
-                   desc, def_val, order_val, mandatory_toggle):
+                   desc, def_val, order_val, m_toggle):
         """Create catalog item variable."""
         self.cat_item_list.append(
              {
@@ -25,7 +25,7 @@ class SnowVars(object):
                "default_value": def_val,
                "help_text": h_txt,
                "order": order_val,
-               "mandatory": mandatory_toggle
+               "mandatory": m_toggle
                })
 
     def parse_tf_vars(self):
@@ -50,7 +50,7 @@ class SnowVars(object):
                 self.create_var(var_name='tfv_' + var_name, obj_type=obj_type,
                                 q_txt=var_name, t_tip=desc, def_val=def_val,
                                 h_txt=desc, order_val=order_val,
-                                mandatory_toggle=mandatory_toggle)
+                                m_toggle=mandatory_toggle)
                 # self.cat_item_list.append(
                 #      {
                 #        "name": 'tfv_' + var_name,
@@ -76,7 +76,7 @@ class SnowVars(object):
                         def_val="",
                         h_txt="",
                         order_val=self.counter,
-                        mandatory_toggle="false")
+                        m_toggle="false")
         # self.cat_item_list.append(
         #      {
         #        "name": 'adv_toggle',
@@ -98,7 +98,7 @@ class SnowVars(object):
                         def_val=self.os_type,
                         h_txt="OS Type",
                         order_val=1000,
-                        mandatory_toggle="false")
+                        m_toggle="false")
         # self.cat_item_list.append(
         #      {
         #         "name": 'gen_OS_Type',
@@ -120,7 +120,7 @@ class SnowVars(object):
                         def_val=self.os_type,
                         h_txt="AWS account info",
                         order_val=1000,
-                        mandatory_toggle="false")
+                        m_toggle="false")
         # self.cat_item_list.append(
         #      {
         #         "name": 'gen_AwsAccountInfo',
@@ -142,7 +142,7 @@ class SnowVars(object):
                         h_txt="New Terraform Resource RITM that created this "
                               + "Catalog item",
                         order_val=1000,
-                        mandatory_toggle="false")
+                        m_toggle="false")
 
     def get_vars(self):
         """Preform correct order of operations and return variables."""
@@ -150,4 +150,5 @@ class SnowVars(object):
         self.create_adv_toggle()
         self.create_os_type_var()
         self.create_gen_AwsAccountInfo()
+        self.create_gen_TemplateRITM()
         return self.cat_item_list
