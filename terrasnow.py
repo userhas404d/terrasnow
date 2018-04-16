@@ -33,7 +33,7 @@ def get_attachment(user_name, user_pwd, table_name, table_sys_id):
         # download the attachment based on returned sys_id
         snowgetter.get_attachment(sys_id, file_name, file_path, user_name,
                                   user_pwd)
-        return file_name
+        return {'FileName': file_name, 'AttachmentSysId': sys_id}
     except TypeError as e:
         logging.exception('Query results were empty.')
         return ('ERROR: Query results were empty.' +
