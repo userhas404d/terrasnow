@@ -4,13 +4,14 @@
 class SnowVars(object):
     """Terraform to ServiceNow cariable converter."""
 
-    def __init__(self, json_obj, cat_item_id, os_type):
+    def __init__(self, json_obj, cat_item_id, ritm_attachment_sys_id, os_type):
         """Initialize."""
         self.cat_item_id = cat_item_id
         self.cat_item_list = []
         self.json_obj = json_obj
         self.os_type = os_type
         self.counter = 0
+        self.ritm_attachment_sys_id = ritm_attachment_sys_id
 
     def create_var(self, var_name, obj_type, q_txt, t_tip, h_txt,
                    def_val, order_val, m_toggle):
@@ -51,18 +52,6 @@ class SnowVars(object):
                                 q_txt=var_name, t_tip=desc, def_val=def_val,
                                 h_txt=desc, order_val=order_val,
                                 m_toggle=mandatory_toggle)
-                # self.cat_item_list.append(
-                #      {
-                #        "name": 'tfv_' + var_name,
-                #        "type": obj_type,
-                #        "cat_item": self.cat_item_id,
-                #        "question_text": var_name,
-                #        "tooltip": desc,
-                #        "default_value": def_val,
-                #        "help_text": desc,
-                #        "order": order_val,
-                #        "mandatory": mandatory_toggle
-                #        })
 
     def create_adv_toggle(self):
         """Create the advanced mode toggle."""
@@ -77,16 +66,6 @@ class SnowVars(object):
                         h_txt="",
                         order_val=self.counter,
                         m_toggle="false")
-        # self.cat_item_list.append(
-        #      {
-        #        "name": 'adv_toggle',
-        #        "type": "CheckBox",
-        #        "cat_item": self.cat_item_id,
-        #        "question_text": "Show Advanced Options",
-        #        "tooltip": "Select to show advanced options",
-        #        "default_value": "",
-        #        "order": self.counter
-        #        })
 
     def create_os_type_var(self):
         """Create the advanced mode toggle."""
@@ -99,17 +78,6 @@ class SnowVars(object):
                         h_txt="OS Type",
                         order_val=1000,
                         m_toggle="false")
-        # self.cat_item_list.append(
-        #      {
-        #         "name": 'gen_OS_Type',
-        #         "type": 'String',
-        #         "cat_item": self.cat_item_id,
-        #         "question_text": 'OS Type',
-        #         "tooltip": 'OS Type',
-        #         "default_value": self.os_type,
-        #         "help_text": 'OS Type',
-        #         "order": 1000
-        #         })
 
     def create_gen_AwsAccountInfo(self):
         """Create the advanced mode toggle."""
@@ -121,16 +89,6 @@ class SnowVars(object):
                         h_txt="AWS account info",
                         order_val=1000,
                         m_toggle="false")
-        # self.cat_item_list.append(
-        #      {
-        #         "name": 'gen_AwsAccountInfo',
-        #         "type": 'Multi Line Text',
-        #         "cat_item": self.cat_item_id,
-        #         "question_text": 'AWS account info',
-        #         "tooltip": 'AWS account info',
-        #         "help_text": 'AWS account info',
-        #         "order": 1000
-        #         })
 
     def create_gen_TemplateRITM(self):
         """Create the advanced mode toggle."""
@@ -138,7 +96,7 @@ class SnowVars(object):
                         obj_type="String",
                         q_txt="New Terraform Resource RITM",
                         t_tip="New Terraform Resource RITM",
-                        def_val=self.os_type,
+                        def_val=self.ritm_attachment_sys_id,
                         h_txt="New Terraform Resource RITM that created this "
                               + "Catalog item",
                         order_val=1000,

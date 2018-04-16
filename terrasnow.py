@@ -55,13 +55,15 @@ def create_catalog_item(user_name, user_pwd, table_name, table_sys_id,
     return cat_sys_id
 
 
-def unzip_and_create_vars(user_name, user_pwd, file_name, cat_sys_id, os_type):
+def unzip_and_create_vars(user_name, user_pwd, file_name, cat_sys_id,
+                          ritm_attachment_sys_id, os_type):
     """Unzip template and create catalog item vars."""
     # unzip the downloaded file and create category item variables
     my_zip = zip_handler.zip_parser(file_name, file_path, cat_sys_id)
     my_zip.unzip()
     json_obj = my_zip.hcl_to_json(my_zip.tf_var_loc)
-    sn_vars = sn_var_handler.SnowVars(json_obj, cat_sys_id, os_type)
+    sn_vars = sn_var_handler.SnowVars(json_obj, cat_sys_id,
+                                      ritm_attachment_sys_id, os_type)
     var_list = sn_vars.get_vars()
 
     # push category item variables to snow
