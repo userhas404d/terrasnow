@@ -92,7 +92,7 @@ class SnowVars(object):
 
     def create_gen_TemplateRITM(self):
         """Create the advanced mode toggle."""
-        self.create_var(var_name='gen_TemplateRITM',
+        self.create_var(var_name='gen_TemplateSysId',
                         obj_type="String",
                         q_txt="New Terraform Resource RITM",
                         t_tip="New Terraform Resource RITM",
