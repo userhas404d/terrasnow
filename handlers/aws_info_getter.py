@@ -122,7 +122,7 @@ def date_check(date):
     """Check date is at least 60 days old."""
     # 2018-03-14T19:30:27.000Z
     today = datetime.date.today()
-    margin = datetime.timedelta(days=30)
+    margin = datetime.timedelta(days=60)
     d = dateutil.parser.parse(date)
     date = datetime.date(d.year, d.month, d.day)
     # check if date is within 60 days of today
