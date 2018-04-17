@@ -40,7 +40,8 @@ def get_attachment(user_name, user_pwd, table_name, table_sys_id,
             sys_id = attachment_sys_id
             file_name = file_name
         # download the attachment based on returned sys_id
-        snowgetter.get_attachment(sys_id, file_name, file_path, user_name,
+        tmp_file_path = file_path + '/tmp/'
+        snowgetter.get_attachment(sys_id, file_name, tmp_file_path, user_name,
                                   user_pwd)
         test_dict = {}
         test_dict['FileName'] = file_name
