@@ -89,9 +89,9 @@ class Handler(object):
     def get_upload_file_name(self, file_name):
         """Return the name of the file to upload."""
         if self.sys_id and self.file_name:
-            return self.sys_id + '-' + self.file_name
+            return (self.sys_id + '-' + self.file_name).replace(" ", "")
         else:
-            return file_name
+            return file_name.replace(" ", "")
 
     def upload_file(self):
         """Upload file."""
