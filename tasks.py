@@ -16,12 +16,12 @@ logging.basicConfig(filename='tasks.log', level=logging.INFO,
 
 
 @task
-def get_attachment(ctx, user_name, user_pwd,
-                   table_name, table_sys_id):
+def get_attachment(ctx, user_name, user_pwd, table_name, table_sys_id,
+                   attachment_sys_id, file_name):
     """Call catalog item creation application."""
     # returns the file name of the attachment
     print(terrasnow.get_attachment(user_name, user_pwd, table_name,
-                                   table_sys_id))
+                                   table_sys_id, attachment_sys_id, file_name))
 
 
 @task
@@ -142,3 +142,18 @@ def get_aws_info(ctx, target_role, duration):
     response = aws_info_getter.assumed_role_get_everything(target_role,
                                                            int(duration))
     print(response)
+
+
+@task
+def s3_reupload(ctx, file_name, cat_sys_id, zip_full_path, target_bucket):
+    """Reupload template to S3."""
+    logging.info('S3 reupload called')
+    print(terrasnow.s3_reupload(file_name, cat_sys_id,
+                                zip_full_path, target_bucket))
+
+
+@task
+def delete_S3obj(ctx, file_name, cat_sys_id, target_bucket):
+    """Remove S3 object."""
+    logging.info('Remove S3 object called.')
+    print(terrasnow.delete_S3obj(file_name, cat_sys_id, target_bucket))

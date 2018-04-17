@@ -22,15 +22,23 @@ logging.basicConfig(filename='terrasnow.log', level=logging.INFO,
                     format=FORMAT)
 
 
-def get_attachment(user_name, user_pwd, table_name, table_sys_id):
+def get_attachment(user_name, user_pwd, table_name, table_sys_id,
+                   attachment_sys_id, file_name):
     """Download the attachment."""
     # get the attachment's sys_id and file_name
     try:
-        attachment_info = snowgetter.get_attachment_info(table_name,
-                                                         table_sys_id,
-                                                         user_name, user_pwd)
-        sys_id = attachment_info['sys_id']
-        file_name = attachment_info['file_name']
+        if table_name:
+            logging.info('table name provided to get_attachment.')
+            attachment_info = snowgetter.get_attachment_info(table_name,
+                                                             table_sys_id,
+                                                             user_name,
+                                                             user_pwd)
+            sys_id = attachment_info['sys_id']
+            file_name = attachment_info['file_name']
+        else:
+            logging.info('table name not provided to get_attachment.')
+            sys_id = attachment_sys_id
+            file_name = file_name
         # download the attachment based on returned sys_id
         snowgetter.get_attachment(sys_id, file_name, file_path, user_name,
                                   user_pwd)
@@ -120,6 +128,23 @@ def s3_upload(user_name, user_pwd, table_name, sys_id, file_name,
         snowgetter.make_cat_var(var_item_data, user_name, user_pwd)
     else:
         return 'File upload failed.'
+
+
+def s3_reupload(file_name, cat_sys_id, zip_full_path, target_bucket):
+    """Reupload template to S3."""
+    s3_obj = s3_handler.Handler(file_name, cat_sys_id, zip_full_path,
+                                target_bucket)
+    s3_obj.upload_file()
+    return "SUCESS"
+
+
+def delete_S3obj(file_name, cat_sys_id, target_bucket):
+    """Remove S3 object."""
+    zip_full_path = ""
+    s3_obj = s3_handler.Handler(file_name, cat_sys_id, zip_full_path,
+                                target_bucket)
+    s3_obj.delete_obj()
+    return "SUCESS"
 
 
 def cleanup(zip_full_path):

@@ -123,3 +123,12 @@ class Handler(object):
                 s3.download_fileobj(self.target_bucket, self.file_name, data)
         else:
             logging.error('Object not in bucket.')
+
+    def delete_obj(self):
+        """Delete an object provided its bucketname and key."""
+        if not self.s3_file_check():
+            s3.delete_object(Bucket=self.target_bucket,
+                             Key=self.upload_file_name)
+        else:
+            logging.error(self.upload_file_name + ' is not in bucket '
+                          + self.target_bucket)
