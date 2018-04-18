@@ -1,5 +1,22 @@
-variable "repo_base" {}
-variable "salt_version" {}
+variable "repo_base" {
+  default = "https://test.com/test"
+}
+variable "salt_version" {
+  default = 123
+}
+variable "sn_user_name" {
+  type = "string"
+  description = "User name of the ServiceNow account making the REST api calls."
+}
+variable "sn_pwd" {
+  type = "string"
+  description = "Password of the ServiceNow account making the REST api calls."
+}
+variable "host_user" {
+  type = "string"
+  description = "User name of the host's user."
+  default = "ec2-user"
+}
 
 variable "create_archive" {
   default = "false"
@@ -204,12 +221,13 @@ resource "aws_instance" "this" {
       "set -e",
       "sudo yum -y install git",
       "git clone -b ${var.reposync_ref} ${var.reposync_repo}",
-      "PRIVATE_SSH_KEY=${join("", tls_private_key.this.*.private_key_pem)}"
+      "cd terrasnow",
+      "invoke post-creds --user-name='${var.sn_user_name}' --user-pwd='${var.sn_pwd}' --key-name='testkey' --host-user-name='${var.host_user}' --ssh-private-key='${join("", tls_private_key.this.*.private_key_pem)}'",
     ]
 
     connection {
       port        = 22
-      user        = "ec2-user"
+      user        = "${var.host_user}"
       private_key = "${tls_private_key.this.private_key_pem}"
     }
   }
