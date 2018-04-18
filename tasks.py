@@ -16,6 +16,14 @@ logging.basicConfig(filename='tasks.log', level=logging.INFO,
 
 
 @task
+def post_creds(ctx, user_name, user_pwd, key_name, host_user_name,
+               ssh_private_key):
+    """Call catalog item creation application."""
+    print(terrasnow.post_ssh_creds(user_name, user_pwd, key_name,
+                                   host_user_name, ssh_private_key))
+
+
+@task
 def get_attachment(ctx, user_name, user_pwd, table_name, table_sys_id,
                    attachment_sys_id, file_name):
     """Call catalog item creation application."""

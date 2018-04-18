@@ -239,6 +239,18 @@ def make_client_script(client_script_data, user_name, user_pwd):
     return sys_id_check(response)
 
 
+def make_ssh_cred(ssh_cred_data, user_name, user_pwd):
+    """Create a category item variable."""
+    logging.info('submitting catalog script creation request.')
+    record = snow_record('table/ssh_private_key_credentials', "",
+                         ssh_cred_data,
+                         user_name, user_pwd)
+    logging.info('Defined snowgetter parameters.')
+    response = record.make_POST_request()
+    logging.info('Made post request via snowgetter.')
+    return sys_id_check(response)
+
+
 def update_snow_var_value(table_name, sys_id, var_item_data, user_name,
                           user_pwd):
     """Update values of vars in target item."""
@@ -259,6 +271,9 @@ def sys_id_check(response):
         logging.info('Response contained sys_id: {}'.format(sys_id))
         return sys_id
     except KeyError as e:
+        logging.error('Response did not contain expected results.')
+        print('ERROR: sys_id not found in response.')
+    except TypeError as e:
         logging.error('Response did not contain expected results.')
         print('ERROR: sys_id not found in response.')
 

@@ -5,7 +5,7 @@ import os
 
 
 class SnowClientScript(object):
-    """Terraform Zip Parser."""
+    """Servicenow client script."""
 
     def __init__(self, cat_item_id):
         """Initialize."""
