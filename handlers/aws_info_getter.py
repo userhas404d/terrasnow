@@ -23,7 +23,6 @@ class AwsInfoGetter(object):
         """Get AWS region."""
         if not region:
             region = "us-east-1"
-        print(region)
         return region
 
     def get_assume_role_input(self, role_arn, duration):
