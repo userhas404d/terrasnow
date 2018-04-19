@@ -15,11 +15,13 @@ data "aws_iam_policy_document" "trust" {
   }
 }
 
-data "aws_iam_policy_document" "deny-data-role" {
+data "aws_iam_policy_document" "deny-data-policy-doc" {
   count = "${var.skip_repo_sync ? 0 : 1}"
 
 #reference: https://alestic.com/2015/10/aws-iam-readonly-too-permissive/
   statement {
+    sid = "DenyData"
+    effect = "Deny"
     actions = [
     "cloudformation:GetTemplate",
     "dynamodb:GetItem",
@@ -38,19 +40,28 @@ data "aws_iam_policy_document" "deny-data-role" {
     "sdb:Select*",
     "sqs:ReceiveMessage",
     ]
-
-    resources = [
-    "*",
-    ]
+    resources = ["*"]
   }
 }
 
-resource "aws_iam_role" "deny-data-role" {
+resource "aws_iam_policy" "deny-data-policy" {
   count = "${var.skip_repo_sync ? 0 : 1}"
 
-  name               = "deny-data-${var.rand_id}"
+  name               = "deny-data-policy-${var.rand_id}"
   description        = "Use in combination with Amazon managed ReadOnlyAccess policy"
-  assume_role_policy = "${data.aws_iam_policy_document.deny-data-role.json}"
+  policy = "${data.aws_iam_policy_document.deny-data-policy-doc.json}"
+}
+
+resource "aws_iam_role" "init-deny-data-role" {
+  count = "${var.skip_repo_sync ? 0 : 1}"
+
+  name = "deny-data-role-${var.rand_id}"
+  assume_role_policy = "${data.aws_iam_policy_document.trust.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "deny-data" {
+    role       = "${aws_iam_role.init-deny-data-role.name}"
+    policy_arn = "${aws_iam_policy.deny-data-policy.arn}"
 }
 
 data "aws_iam_policy_document" "role" {
