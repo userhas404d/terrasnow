@@ -125,14 +125,14 @@ resource "random_id" "this" {
 resource "aws_iam_role" "this" {
   count = "${local.skip_repo_sync ? 0 : 1}"
 
-  name               = "salt-reposync-${random_id.this.hex}"
+  name               = "terraform-host-${random_id.this.hex}"
   assume_role_policy = "${data.aws_iam_policy_document.trust.json}"
 }
 
 resource "aws_iam_role_policy" "this" {
   count = "${local.skip_repo_sync ? 0 : 1}"
 
-  name   = "salt-reposync-${random_id.this.hex}"
+  name   = "terraform-host-${random_id.this.hex}"
   role   = "${aws_iam_role.this.id}"
   policy = "${data.aws_iam_policy_document.role.json}"
 }
@@ -140,7 +140,7 @@ resource "aws_iam_role_policy" "this" {
 resource "aws_iam_instance_profile" "this" {
   count = "${local.skip_repo_sync ? 0 : 1}"
 
-  name = "salt-reposync-${random_id.this.hex}"
+  name = "terraform-host-${random_id.this.hex}"
   role = "${aws_iam_role.this.name}"
 }
 
@@ -154,18 +154,18 @@ resource "tls_private_key" "this" {
 resource "aws_key_pair" "this" {
   count = "${local.skip_repo_sync ? 0 : 1}"
 
-  key_name   = "salt-reposync-${random_id.this.hex}"
+  key_name   = "terraform-host-${random_id.this.hex}"
   public_key = "${tls_private_key.this.public_key_openssh}"
 }
 
 resource "aws_security_group" "this" {
   count = "${local.skip_repo_sync ? 0 : 1}"
 
-  name   = "salt-reposync-${random_id.this.hex}"
+  name   = "terraform-host-${random_id.this.hex}"
   vpc_id = "${data.aws_vpc.this.id}"
 
   tags {
-    Name = "salt-reposync-${random_id.this.hex}"
+    Name = "terraform-host-${random_id.this.hex}"
   }
 
   ingress {
@@ -213,7 +213,7 @@ resource "aws_instance" "this" {
   vpc_security_group_ids = ["${aws_security_group.this.id}"]
 
   tags {
-    Name = "salt-reposync-${random_id.this.hex}"
+    Name = "terraform-host-${random_id.this.hex}"
   }
 
   provisioner "remote-exec" {
@@ -222,7 +222,9 @@ resource "aws_instance" "this" {
       "sudo yum -y install git",
       "git clone -b ${var.reposync_ref} ${var.reposync_repo}",
       "cd terrasnow",
-      "invoke post-creds --user-name='${var.sn_user_name}' --user-pwd='${var.sn_pwd}' --key-name='testkey' --host-user-name='${var.host_user}' --ssh-private-key='${join("", tls_private_key.this.*.private_key_pem)}'",
+      "chmod +x ./terraform_host/install-deps.sh",
+      "./terraform_host/install-deps.sh",
+    #  "invoke post-creds --user-name='${var.sn_user_name}' --user-pwd='${var.sn_pwd}' --key-name='testkey' --host-user-name='${var.host_user}' --ssh-private-key='${join("", tls_private_key.this.*.private_key_pem)}'",
     ]
 
     connection {
