@@ -41,6 +41,13 @@ data "aws_partition" "current" {
   count = "${local.skip_repo_sync ? 0 : 1}"
 }
 
+module "iam" {
+  source         = "./modules"
+  rand_id        = "${random_id.this.hex}"
+  aws_partition  = "${data.aws_partition.current.partition}"
+  skip_repo_sync = "${local.skip_repo_sync}"
+}
+
 data "http" "ip" {
   count = "${local.skip_repo_sync ? 0 : 1}"
 
@@ -50,7 +57,6 @@ data "http" "ip" {
 
 data "aws_vpc" "this" {
   count = "${local.skip_repo_sync ? 0 : 1}"
-
   default = "true"
 }
 
@@ -72,45 +78,6 @@ data "aws_ami" "this" {
   name_regex = "amzn-ami-hvm-2017\\.09\\.\\d\\.[\\d]{8}-x86_64-gp2"
 }
 
-data "aws_iam_policy_document" "trust" {
-  count = "${local.skip_repo_sync ? 0 : 1}"
-
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
-}
-
-data "aws_iam_policy_document" "role" {
-  count = "${local.skip_repo_sync ? 0 : 1}"
-
-  statement {
-    actions = [
-      "s3:DeleteObject",
-      "s3:GetObject",
-      "s3:PutObject",
-    ]
-
-    resources = [
-      "arn:${data.aws_partition.current.partition}:s3:::${local.bucket}/${local.key}/*",
-    ]
-  }
-
-  statement {
-    actions = [
-      "s3:ListBucket",
-    ]
-
-    resources = [
-      "arn:${data.aws_partition.current.partition}:s3:::${local.bucket}",
-    ]
-  }
-}
-
 resource "random_id" "this" {
   count = "${local.skip_repo_sync ? 0 : 1}"
 
@@ -122,26 +89,11 @@ resource "random_id" "this" {
   byte_length = 8
 }
 
-resource "aws_iam_role" "this" {
-  count = "${local.skip_repo_sync ? 0 : 1}"
-
-  name               = "terraform-host-${random_id.this.hex}"
-  assume_role_policy = "${data.aws_iam_policy_document.trust.json}"
-}
-
-resource "aws_iam_role_policy" "this" {
-  count = "${local.skip_repo_sync ? 0 : 1}"
-
-  name   = "terraform-host-${random_id.this.hex}"
-  role   = "${aws_iam_role.this.id}"
-  policy = "${data.aws_iam_policy_document.role.json}"
-}
-
 resource "aws_iam_instance_profile" "this" {
   count = "${local.skip_repo_sync ? 0 : 1}"
 
   name = "terraform-host-${random_id.this.hex}"
-  role = "${aws_iam_role.this.name}"
+  role = "${module.iam.host_role_name}"
 }
 
 resource "tls_private_key" "this" {
