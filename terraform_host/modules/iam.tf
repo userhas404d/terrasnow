@@ -15,6 +15,23 @@ data "aws_iam_policy_document" "trust" {
   }
 }
 
+data "aws_iam_policy_document" "read-only" {
+  count = "${var.skip_repo_sync ? 0 : 1}"
+
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+    principals {
+      type        = "AWS"
+      identifiers = ["${aws_iam_role.this.arn}"]
+    }
+  }
+}
+
 data "aws_iam_policy_document" "deny-data-policy-doc" {
   count = "${var.skip_repo_sync ? 0 : 1}"
 
@@ -36,7 +53,6 @@ data "aws_iam_policy_document" "deny-data-policy-doc" {
     "kinesis:Get*",
     "lambda:GetFunction",
     "logs:GetLogEvents",
-    "s3:GetObject",
     "sdb:Select*",
     "sqs:ReceiveMessage",
     ]
@@ -52,16 +68,21 @@ resource "aws_iam_policy" "deny-data-policy" {
   policy = "${data.aws_iam_policy_document.deny-data-policy-doc.json}"
 }
 
-resource "aws_iam_role" "init-deny-data-role" {
+resource "aws_iam_role" "read-only-role" {
   count = "${var.skip_repo_sync ? 0 : 1}"
 
-  name = "deny-data-role-${var.rand_id}"
-  assume_role_policy = "${data.aws_iam_policy_document.trust.json}"
+  name = "read-only-${var.rand_id}"
+  assume_role_policy = "${data.aws_iam_policy_document.read-only.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "deny-data" {
-    role       = "${aws_iam_role.init-deny-data-role.name}"
+    role       = "${aws_iam_role.read-only-role.name}"
     policy_arn = "${aws_iam_policy.deny-data-policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "read-only" {
+    role       = "${aws_iam_role.read-only-role.name}"
+    policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
 }
 
 data "aws_iam_policy_document" "role" {
@@ -110,4 +131,9 @@ resource "aws_iam_role_policy" "this" {
 output "host_role_name" {
   description = "name of the role being assinged to the host"
   value = "${aws_iam_role.this.name}"
+}
+
+output "read_only_role_arn" {
+  description = "arn of the read only role"
+  value = "${aws_iam_role.read-only-role.arn}"
 }
