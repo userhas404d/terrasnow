@@ -1,6 +1,3 @@
-/*
- * MyFavoritesAjax script include Description - sample AJAX processor returning multiple value pairs
- */
 var TerraformAWSAccountQuery = Class.create();
 TerraformAWSAccountQuery.prototype = Object.extendsObject(AbstractAjaxProcessor, {
 
