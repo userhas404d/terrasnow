@@ -1,39 +1,4 @@
-variable "repo_base" {
-  default = "https://test.com/test"
-}
-variable "salt_version" {
-  default = 123
-}
-variable "sn_user_name" {
-  type = "string"
-  description = "User name of the ServiceNow account making the REST api calls."
-}
-variable "sn_pwd" {
-  type = "string"
-  description = "Password of the ServiceNow account making the REST api calls."
-}
-variable "host_user" {
-  type = "string"
-  description = "User name of the host's user."
-  default = "ec2-user"
-}
-
-variable "create_archive" {
-  default = "false"
-}
-
-variable "reposync_repo" {
-  default = "https://github.com/userhas404d/terrasnow.git"
-}
-
-variable "reposync_ref" {
-  default = "Develop"
-}
-
 locals {
-  url_parts      = "${split("/", var.repo_base)}"
-  bucket         = "${local.url_parts[3]}"
-  key            = "${join("/", slice(local.url_parts, 4, length(local.url_parts)))}"
   skip_repo_sync = "${1 == 0}"
 }
 
@@ -176,7 +141,8 @@ resource "aws_instance" "this" {
       "cd terrasnow",
       "chmod +x ./terraform_host/install-deps.sh",
       "./terraform_host/install-deps.sh",
-    #  "invoke post-creds --user-name='${var.sn_user_name}' --user-pwd='${var.sn_pwd}' --key-name='testkey' --host-user-name='${var.host_user}' --ssh-private-key='${join("", tls_private_key.this.*.private_key_pem)}'",
+      "export SERVICENOW_INSTANCE_NAME=${var.ServiceNowInstanceName}"
+      "invoke post-creds --user-name='${var.sn_user_name}' --user-pwd='${var.sn_pwd}' --key-name='testkey' --host-user-name='${var.host_user}' --ssh-private-key='${join("", tls_private_key.this.*.private_key_pem)}'",
     ]
 
     connection {
