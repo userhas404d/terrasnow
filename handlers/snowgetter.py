@@ -3,6 +3,7 @@
 import ast
 import json
 import logging
+import os
 import pathlib
 import urllib.parse
 import urllib.request
@@ -28,7 +29,7 @@ class snow_record(object):
                    "Content-Type": "application/json",
                    "Accept": "application/json"
                    }
-        self.host = 'snow.snow-pilot.dicelab.net'
+        self.host = os.environ['SERVICENOW_INSTANCE_NAME']
         self.base_url = 'https://{}/api/now/'.format(self.host)
         self.request_content = None
         self.data = self.parse_data(data)
