@@ -141,7 +141,7 @@ resource "aws_instance" "this" {
       "cd terrasnow",
       "chmod +x ./terraform_host/install-deps.sh",
       "./terraform_host/install-deps.sh",
-      "export SERVICENOW_INSTANCE_NAME=${var.ServiceNowInstanceName}"
+      "export SERVICENOW_INSTANCE_NAME=${var.ServiceNowInstanceName}",
       "invoke post-creds --user-name='${var.sn_user_name}' --user-pwd='${var.sn_pwd}' --key-name='testkey' --host-user-name='${var.host_user}' --ssh-private-key='${join("", tls_private_key.this.*.private_key_pem)}'",
     ]
 
