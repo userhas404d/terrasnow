@@ -1,4 +1,4 @@
-s"""All the things."""
+"""All the things."""
 
 import json
 import logging
