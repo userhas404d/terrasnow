@@ -1,4 +1,4 @@
-"""All the things."""
+s"""All the things."""
 
 import json
 import logging
@@ -7,6 +7,7 @@ import shutil
 
 import handlers.s3_handler as s3_handler
 import handlers.sn_client_script_handler as sn_client_script_handler
+import handlers.sn_cred_handler as sn_cred_handler
 import handlers.sn_var_handler as sn_var_handler
 import handlers.snow_cat_item as snow_cat_item
 import handlers.snowgetter as snowgetter
@@ -20,6 +21,16 @@ FORMAT = ("[%(asctime)s][%(levelname)s]" +
           "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s")
 logging.basicConfig(filename='terrasnow.log', level=logging.INFO,
                     format=FORMAT)
+
+
+def post_ssh_creds(user_name, user_pwd, key_name, host_user_name,
+                   ssh_private_key):
+    """Create ssh credentials in target snow instance."""
+    ssh_cred = sn_cred_handler.SnowSSHCredential(key_name, host_user_name,
+                                                 ssh_private_key)
+    cred_list = ssh_cred.get_creds()
+    for cred in cred_list:
+        snowgetter.make_ssh_cred(cred, user_name, user_pwd)
 
 
 def get_attachment(user_name, user_pwd, table_name, table_sys_id,
